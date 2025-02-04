@@ -1,0 +1,107 @@
+name: Sync Changes to Child Repos
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'commonFolder/**'
+      - 'subcommon/**'
+
+jobs:
+  sync-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Parent Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure we get history for diff detection
+
+      - name: Detect Changes
+        run: |
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- commonFolder || true)" || -n "$(git diff --name-only HEAD^ HEAD -- subcommon || true)" ]]; then
+            echo "common_changes=true" >> $GITHUB_ENV
+          fi
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- commonFolder/child-1 || true)" ]]; then
+            echo "child1_changes=true" >> $GITHUB_ENV
+          fi
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- commonFolder/child-2 || true)" ]]; then
+            echo "child2_changes=true" >> $GITHUB_ENV
+          fi
+
+      # 🔹 Sync commonFolder and subcommon to both child repos
+      - name: Sync Common Changes to Child Repo 1
+        if: env.common_changes == 'true'
+        run: |
+          git clone https://github.com/shobhitupadhyayy/child-1.git ~/child-1
+          cd ~/child-1
+          cp -r $GITHUB_WORKSPACE/commonFolder/* .
+          cp -r $GITHUB_WORKSPACE/subcommon/* .
+          git config user.name "shobhitupadhyayy"
+          git config user.email "shobhit.upadhyay112@gmail.com"
+          git add .
+          git commit -m "Sync common changes from parent repo" || exit 0
+          git push origin main
+
+      - name: Sync Common Changes to Child Repo 2
+        if: env.common_changes == 'true'
+        run: |
+          git clone https://github.com/shobhitupadhyayy/child-2.git ~/child-2
+          cd ~/child-2
+          cp -r $GITHUB_WORKSPACE/commonFolder/* .
+          cp -r $GITHUB_WORKSPACE/subcommon/* .
+          git config user.name "shobhitupadhyayy"
+          git config user.email "shobhit.upadhyay112@gmail.com"
+          git add .
+          git commit -m "Sync common changes from parent repo" || exit 0
+          git push origin main
+
+      # 🔹 Sync specific changes to Child Repo 1 (child-1 folder)
+      - name: Sync Specific Changes to Child Repo 1
+        if: env.child1_changes == 'true'
+        run: |
+          git clone https://github.com/shobhitupadhyayy/child-1.git ~/child-1
+          cd ~/child-1
+          cp -r $GITHUB_WORKSPACE/commonFolder/child-1/* .
+          git config user.name "shobhitupadhyayy"
+          git config user.email "shobhit.upadhyay112@gmail.com"
+          git add .
+          git commit -m "Sync child-1 specific changes from parent repo" || exit 0
+          git push origin main
+
+      # 🔹 Sync specific changes to Child Repo 2 (child-2 folder)
+      - name: Sync Specific Changes to Child Repo 2
+        if: env.child2_changes == 'true'
+        run: |
+          git clone https://github.com/shobhitupadhyayy/child-2.git ~/child-2
+          cd ~/child-2
+          cp -r $GITHUB_WORKSPACE/commonFolder/child-2/* .
+          git config user.name "shobhitupadhyayy"
+          git config user.email "shobhit.upadhyay112@gmail.com"
+          git add .
+          git commit -m "Sync child-2 specific changes from parent repo" || exit 0
+          git push origin main
+
+      # 🔄 Create PRs if needed
+      - name: Create PR in Child Repo 1
+        if: env.common_changes == 'true' || env.child1_changes == 'true'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PAT }}
+          repository: shobhitupadhyayy/child-1
+          branch: main
+          title: "Sync Updates from Parent Repo"
+          body: "This PR syncs updates from the parent repository."
+          commit-message: "Sync updates from parent repo"
+
+      - name: Create PR in Child Repo 2
+        if: env.common_changes == 'true' || env.child2_changes == 'true'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PAT }}
+          repository: shobhitupadhyayy/child-2
+          branch: main
+          title: "Sync Updates from Parent Repo"
+          body: "This PR syncs updates from the parent repository."
+          commit-message: "Sync updates from parent repo"
