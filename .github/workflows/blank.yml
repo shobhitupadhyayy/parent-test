@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'commonFolder/**'
-      - 'subcommon/**'
+      - 'commonFolder/sub-common/**'
 
 jobs:
   sync-changes:
@@ -37,7 +37,7 @@ jobs:
           git clone https://github.com/shobhitupadhyayy/child-1.git ~/child-1
           cd ~/child-1
           cp -r $GITHUB_WORKSPACE/commonFolder/* .
-          cp -r $GITHUB_WORKSPACE/subcommon/* .
+          cp -r $GITHUB_WORKSPACE/commonFolder/sub-common* .
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
           git add .
@@ -50,7 +50,7 @@ jobs:
           git clone https://github.com/shobhitupadhyayy/child-2.git ~/child-2
           cd ~/child-2
           cp -r $GITHUB_WORKSPACE/commonFolder/* .
-          cp -r $GITHUB_WORKSPACE/subcommon/* .
+          cp -r $GITHUB_WORKSPACE/commonFolder/sub-common* .
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
           git add .
