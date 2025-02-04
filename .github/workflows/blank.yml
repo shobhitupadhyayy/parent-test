@@ -54,7 +54,7 @@ jobs:
           cp -r $GITHUB_WORKSPACE/commonFolder/sub-common* .
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
-          git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-1.git
+          git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-2.git
           git add .
           git commit -m "Sync common changes from parent repo" || exit 0
           git push origin main
@@ -82,7 +82,7 @@ jobs:
           cp -r $GITHUB_WORKSPACE/commonFolder/child-2/* .
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
-          git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-1.git
+          git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-2.git
           git add .
           git commit -m "Sync child-2 specific changes from parent repo" || exit 0
           git push origin main
