@@ -36,8 +36,10 @@ jobs:
         run: |
           git clone https://github.com/shobhitupadhyayy/child-1.git ~/child-1
           cd ~/child-1
-          cp -r $GITHUB_WORKSPACE/commonFolder/* .
-          cp -r $GITHUB_WORKSPACE/commonFolder/sub-common/*
+          # Check and create directories for common files only (not for child-2)
+          mkdir -p sub-common
+          cp -r $GITHUB_WORKSPACE/commonFolder/* ./ # This syncs common files
+          cp -r $GITHUB_WORKSPACE/commonFolder/sub-common/* ./sub-common # Sync sub-common files
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
           git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-1.git
@@ -50,8 +52,10 @@ jobs:
         run: |
           git clone https://github.com/shobhitupadhyayy/child-2.git ~/child-2
           cd ~/child-2
-          cp -r $GITHUB_WORKSPACE/commonFolder/* .
-          cp -r $GITHUB_WORKSPACE/commonFolder/sub-common/* ./sub-common
+          # Check and create directories for common files only (not for child-1)
+          mkdir -p sub-common
+          cp -r $GITHUB_WORKSPACE/commonFolder/* ./ # This syncs common files
+          cp -r $GITHUB_WORKSPACE/commonFolder/sub-common/* ./sub-common # Sync sub-common files
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
           git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-2.git
@@ -65,7 +69,9 @@ jobs:
         run: |
           git clone https://github.com/shobhitupadhyayy/child-1.git ~/child-1
           cd ~/child-1
-          cp -r $GITHUB_WORKSPACE/commonFolder/child-1/* .
+          # Check and create directories for child-1 specific files
+          mkdir -p child-1
+          cp -r $GITHUB_WORKSPACE/commonFolder/child-1/* ./child-1 # Only sync child-1 specific files
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
           git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-1.git
@@ -79,7 +85,9 @@ jobs:
         run: |
           git clone https://github.com/shobhitupadhyayy/child-2.git ~/child-2
           cd ~/child-2
-          cp -r $GITHUB_WORKSPACE/commonFolder/child-2/* .
+          # Check and create directories for child-2 specific files
+          mkdir -p child-2
+          cp -r $GITHUB_WORKSPACE/commonFolder/child-2/* ./child-2 # Only sync child-2 specific files
           git config user.name "shobhitupadhyayy"
           git config user.email "shobhit.upadhyay112@gmail.com"
           git remote set-url origin https://shobhitupadhyayy:${{ secrets.PAT }}@github.com/shobhitupadhyayy/child-2.git
