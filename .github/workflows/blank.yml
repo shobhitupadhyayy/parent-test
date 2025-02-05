@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Parent Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensure we get history for diff detection
+          fetch-depth: 0  # Ensure we get history for diff detection 
 
       - name: Detect Changes
         run: |
